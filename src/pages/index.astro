@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import JobCard from '../components/JobCard.astro';
+import { JOBS } from '../data/jobs';
+
+export const prerender = true;
+---
+
+<BaseLayout
+  title="Adaptive IT — Offres de recrutement"
+  description="Adaptive IT recherche des profils IT (architectes, experts, techniciens) pour des missions auprès de grands comptes et du secteur bancaire."
+>
+  <Header />
+  <section class="border-b border-border bg-paper">
+    <div class="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
+      <span class="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Adaptive IT recherche</span>
+      <h1 class="mt-3 max-w-2xl font-display text-4xl font-bold leading-tight text-ink sm:text-5xl">
+        Nos offres de missions &amp; postes IT
+      </h1>
+      <p class="mt-4 max-w-xl text-lg text-muted">
+        Architecture d'entreprise, infrastructure, data, mobile, supervision et support — rejoignez nos clients sur des
+        missions longue durée ou en CDI.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-5xl px-4 py-12 sm:px-6">
+    <div class="grid gap-5 sm:grid-cols-2">
+      {JOBS.map((job) => <JobCard job={job} />)}
+    </div>
+  </section>
+  <Footer />
+</BaseLayout>

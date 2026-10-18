@@ -1,0 +1,22 @@
+---
+import type { Job } from '../data/jobs';
+
+interface Props {
+  job: Job;
+}
+
+const { job } = Astro.props;
+---
+
+<a
+  href={`/postes/${job.slug}/`}
+  class="block rounded-2xl border border-border bg-white p-6 transition hover:border-accent hover:shadow-sm"
+>
+  <span class="text-xs font-semibold uppercase tracking-[0.15em] text-accent">{job.surtitre}</span>
+  <h3 class="mt-2 font-display text-xl font-bold text-ink">{job.intitule}</h3>
+  <p class="mt-2 text-sm text-muted">{job.accroche}</p>
+  <div class="mt-4 flex flex-wrap gap-2 text-xs text-muted">
+    <span class="rounded-full border border-border px-3 py-1">{job.lieu}</span>
+    <span class="rounded-full border border-border px-3 py-1">{job.typeContrat}</span>
+  </div>
+</a>
