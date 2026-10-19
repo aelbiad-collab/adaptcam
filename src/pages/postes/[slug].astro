@@ -15,7 +15,7 @@ const { job } = Astro.props;
 ---
 
 <BaseLayout
-  title={`${job.intitule} — Adaptive IT`}
+  title={`${job.intitule} — Offres de recrutement`}
   description={job.accroche}
 >
   <Header />
@@ -23,7 +23,7 @@ const { job } = Astro.props;
   <section class="border-b border-border bg-paper">
     <div class="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
       <a href="/" class="text-sm text-muted hover:text-accent">&larr; Toutes les offres</a>
-      <span class="mt-4 block text-xs font-semibold uppercase tracking-[0.2em] text-accent">{job.surtitre}</span>
+      <span class="mt-4 block text-xs font-semibold uppercase tracking-[0.2em] text-accent">{job.eyebrow}</span>
       <h1 class="mt-3 font-display text-3xl font-bold leading-tight text-ink sm:text-4xl">{job.intitule}</h1>
       <p class="mt-4 text-lg text-muted">{job.accroche}</p>
       <div class="mt-6 flex flex-wrap gap-2 text-sm">

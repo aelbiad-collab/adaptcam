@@ -14,6 +14,7 @@ export interface Job {
   profil: string[];
   objetMail: string;
   infoDemandee: 'tjm' | 'pretentions';
+  eyebrow: string;
 }
 
 function splitPoints(text: string): string[] {
@@ -316,6 +317,9 @@ export const JOBS: Job[] = RAW_JOBS.map((j) => ({
   profil: splitPoints(j.profilRaw),
   objetMail: j.objetMail,
   infoDemandee: j.typeContrat === 'CDI' ? 'pretentions' : 'tjm',
+  eyebrow: j.surtitre.includes('bancaire')
+    ? "Pour le compte d'un grand groupe bancaire marocain"
+    : "Pour le compte d'un grand compte",
 }));
 
 export function getJob(slug: string): Job | undefined {
