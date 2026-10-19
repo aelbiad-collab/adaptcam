@@ -7,7 +7,7 @@ interface Props {
 
 const { job } = Astro.props;
 const infoLabel = job.infoDemandee === 'tjm' ? 'TJM (MAD/jour)' : 'Prétentions salariales';
-const infoPlaceholder = job.infoDemandee === 'tjm' ? 'Ex: 3500 MAD/jour' : 'Ex: 12000 MAD/mois';
+const infoPlaceholder = job.infoDemandee === 'tjm' ? 'xxxx MAD/jour' : 'xxxx MAD/mois';
 ---
 
 <form id="apply-form" data-slug={job.slug} data-poste={job.intitule} data-lieu={job.lieu} data-contrat={job.typeContrat} data-objet={job.objetMail} data-info-label={infoLabel} novalidate class="rounded-2xl border border-border bg-paper-dim p-6 sm:p-8">
