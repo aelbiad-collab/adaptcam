@@ -150,7 +150,7 @@ const infoPlaceholder = job.infoDemandee === 'tjm' ? 'xxxx MAD/jour' : 'xxxx MAD
         form.reset();
         fileNameEl.textContent = '';
       } catch (err) {
-        showStatus('error', 'Une erreur est survenue lors de l\'envoi. Merci de réessayer ou de nous écrire directement à recrute1@it-adaptive.com.');
+        showStatus('error', 'Une erreur est survenue lors de l\'envoi. Merci de réessayer.');
       } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Envoyer ma candidature';
