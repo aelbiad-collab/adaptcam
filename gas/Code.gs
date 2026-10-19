@@ -7,7 +7,9 @@
 
 const CONFIG = {
   EMAIL_DESTINATAIRE: 'aelbiad@gmail.com',
-  EMAIL_COPIE: 'latifa.boubakraoui@it-adaptive.com',
+  // Copie à Latifa désactivée en attendant validation conjointe — ne pas
+  // réactiver sans confirmation explicite.
+  EMAIL_COPIE: '',
   NOM_DOSSIER_DRIVE: 'Adaptive_IT_CVs',
   NOM_SHEET: 'Adaptive_IT_Candidatures',
 };
@@ -138,13 +140,14 @@ function envoyerEmail(params, cvUrl) {
       </table>
     </div>
   </body></html>`;
-  MailApp.sendEmail({
+  const options = {
     to: CONFIG.EMAIL_DESTINATAIRE,
-    cc: CONFIG.EMAIL_COPIE,
     subject: sujet,
     htmlBody: corps,
     replyTo: params.email || ''
-  });
+  };
+  if (CONFIG.EMAIL_COPIE) options.cc = CONFIG.EMAIL_COPIE;
+  MailApp.sendEmail(options);
 }
 
 function obtenirOuCreerDossier(nom) {
