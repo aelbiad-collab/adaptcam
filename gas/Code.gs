@@ -7,9 +7,7 @@
 
 const CONFIG = {
   EMAIL_DESTINATAIRE: 'aelbiad@gmail.com',
-  // Copie à Latifa désactivée en attendant validation conjointe — ne pas
-  // réactiver sans confirmation explicite.
-  EMAIL_COPIE: '',
+  EMAIL_COPIE: 'latifa.boubakraoui@it-adaptive.com',
   NOM_DOSSIER_DRIVE: 'Adaptive_IT_CVs',
   NOM_SHEET: 'Adaptive_IT_Candidatures',
 };

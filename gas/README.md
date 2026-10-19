@@ -5,9 +5,8 @@ Ce dossier contient le backend qui reçoit les candidatures envoyées par les
 Google Drive, ajoute une ligne dans un Google Sheet unique, et envoie un
 email de notification à `aelbiad@gmail.com`.
 
-La copie à `latifa.boubakraoui@it-adaptive.com` (`CONFIG.EMAIL_COPIE`) est
-**désactivée pour le moment**, en attendant validation conjointe — ne pas la
-réactiver sans confirmation explicite de l'utilisateur.
+Chaque email de notification est envoyé en copie (`cc`) à
+`latifa.boubakraoui@it-adaptive.com` (`CONFIG.EMAIL_COPIE`).
 
 Toutes les candidatures (quel que soit le poste) vont dans la même feuille
 `Adaptive_IT_Candidatures` (colonne « Poste » pour filtrer), et les CV sont
@@ -35,7 +34,7 @@ rangés dans Drive sous `Adaptive_IT_CVs/<slug-du-poste>/`.
 
 Dans l'éditeur Apps Script, sélectionner la fonction `testerScript` dans le
 menu déroulant en haut, puis cliquer sur **Exécuter**. Vous devez recevoir un
-email (sans copie à Latifa pour le moment) et voir une ligne apparaître dans
+email (avec copie à Latifa) et voir une ligne apparaître dans
 `Adaptive_IT_Candidatures` (dossier Drive `Adaptive_IT_CVs`).
 
 ## Mise à jour ultérieure
