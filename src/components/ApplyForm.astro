@@ -6,11 +6,14 @@ interface Props {
 }
 
 const { job } = Astro.props;
+const hasChoice = job.typeContrat === 'Freelance ou CDI';
 const infoLabel = job.infoDemandee === 'tjm' ? 'TJM (MAD/jour)' : 'Prétentions salariales';
-const infoPlaceholder = job.infoDemandee === 'tjm' ? 'xxxx MAD/jour' : 'xxxx MAD/mois';
+const infoPlaceholder = hasChoice
+  ? "Choisissez d'abord un type de contrat"
+  : job.infoDemandee === 'tjm' ? 'xxxx MAD/jour' : 'xxxx MAD/mois';
 ---
 
-<form id="apply-form" data-slug={job.slug} data-poste={job.intitule} data-lieu={job.lieu} data-contrat={job.typeContrat} data-objet={job.objetMail} data-info-label={infoLabel} novalidate class="rounded-2xl border border-border bg-paper-dim p-6 sm:p-8">
+<form id="apply-form" data-slug={job.slug} data-poste={job.intitule} data-lieu={job.lieu} data-contrat={job.typeContrat} data-objet={job.objetMail} data-has-choice={hasChoice ? 'true' : 'false'} data-info-label={infoLabel} novalidate class="rounded-2xl border border-border bg-paper-dim p-6 sm:p-8">
   <div class="grid gap-4 sm:grid-cols-2">
     <div>
       <label for="nom" class="mb-1 block text-sm font-semibold text-ink">Nom <span class="text-accent">*</span></label>
@@ -28,9 +31,24 @@ const infoPlaceholder = job.infoDemandee === 'tjm' ? 'xxxx MAD/jour' : 'xxxx MAD
       <label for="email" class="mb-1 block text-sm font-semibold text-ink">Email <span class="text-accent">*</span></label>
       <input type="email" id="email" name="email" required class="w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-ink focus:border-accent focus:outline-none" />
     </div>
+    {hasChoice && (
+      <div class="sm:col-span-2">
+        <label class="mb-1 block text-sm font-semibold text-ink">Type de contrat souhaité <span class="text-accent">*</span></label>
+        <div class="flex gap-6">
+          <label class="flex items-center gap-2 text-sm text-ink">
+            <input type="radio" name="typeContratSouhaite" value="Freelance" required class="accent-accent" />
+            Freelance
+          </label>
+          <label class="flex items-center gap-2 text-sm text-ink">
+            <input type="radio" name="typeContratSouhaite" value="CDI" required class="accent-accent" />
+            CDI
+          </label>
+        </div>
+      </div>
+    )}
     <div>
-      <label for="infoValeur" class="mb-1 block text-sm font-semibold text-ink">{infoLabel} <span class="text-accent">*</span></label>
-      <input type="text" id="infoValeur" name="infoValeur" required placeholder={infoPlaceholder} class="w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-ink focus:border-accent focus:outline-none" />
+      <label for="infoValeur" class="mb-1 block text-sm font-semibold text-ink"><span id="info-label-text">{infoLabel}</span> <span class="text-accent">*</span></label>
+      <input type="text" id="infoValeur" name="infoValeur" required disabled={hasChoice} placeholder={infoPlaceholder} class="w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-ink focus:border-accent focus:outline-none disabled:cursor-not-allowed disabled:bg-paper-dim disabled:text-muted" />
     </div>
     <div>
       <label for="disponibilite" class="mb-1 block text-sm font-semibold text-ink">Disponibilité <span class="text-accent">*</span></label>
@@ -84,6 +102,27 @@ const infoPlaceholder = job.infoDemandee === 'tjm' ? 'xxxx MAD/jour' : 'xxxx MAD
     const fileNameEl = form.querySelector<HTMLElement>('#file-name')!;
     const statusEl = form.querySelector<HTMLElement>('#form-status')!;
     const submitBtn = form.querySelector<HTMLButtonElement>('#submit-btn')!;
+    const hasChoice = form.dataset.hasChoice === 'true';
+    const infoInput = form.querySelector<HTMLInputElement>('#infoValeur')!;
+    const infoLabelEl = form.querySelector<HTMLElement>('#info-label-text')!;
+    const contratRadios = form.querySelectorAll<HTMLInputElement>('input[name="typeContratSouhaite"]');
+
+    function infoLabelFor(contrat: string) {
+      return contrat === 'Freelance' ? 'TJM (MAD/jour)' : 'Prétentions salariales';
+    }
+
+    if (hasChoice) {
+      contratRadios.forEach((radio) => {
+        radio.addEventListener('change', () => {
+          const label = infoLabelFor(radio.value);
+          infoLabelEl.textContent = label;
+          infoInput.placeholder = radio.value === 'Freelance' ? 'xxxx MAD/jour' : 'xxxx MAD/mois';
+          infoInput.disabled = false;
+          infoInput.value = '';
+          form.dataset.infoLabel = label;
+        });
+      });
+    }
 
     fileDrop.addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', () => {
@@ -118,15 +157,23 @@ const infoPlaceholder = job.infoDemandee === 'tjm' ? 'xxxx MAD/jour' : 'xxxx MAD
       submitBtn.disabled = true;
       submitBtn.textContent = 'Envoi en cours...';
 
+      const typeContratSouhaite = hasChoice
+        ? form.querySelector<HTMLInputElement>('input[name="typeContratSouhaite"]:checked')?.value
+        : undefined;
+      if (hasChoice && !typeContratSouhaite) {
+        showStatus('error', 'Merci de choisir un type de contrat (Freelance ou CDI).');
+        return;
+      }
+
       try {
         const cvBase64 = await fileToBase64(file);
         const payload = {
           posteSlug: form.dataset.slug,
           poste: form.dataset.poste,
           lieu: form.dataset.lieu,
-          typeContrat: form.dataset.contrat,
+          typeContrat: typeContratSouhaite || form.dataset.contrat,
           objetMail: form.dataset.objet,
-          infoLabel: form.dataset.infoLabel,
+          infoLabel: typeContratSouhaite ? infoLabelFor(typeContratSouhaite) : form.dataset.infoLabel,
           nom: (form.querySelector('#nom') as HTMLInputElement).value.trim(),
           prenom: (form.querySelector('#prenom') as HTMLInputElement).value.trim(),
           telephone: (form.querySelector('#telephone') as HTMLInputElement).value.trim(),
@@ -149,6 +196,11 @@ const infoPlaceholder = job.infoDemandee === 'tjm' ? 'xxxx MAD/jour' : 'xxxx MAD
         showStatus('success', 'Votre candidature a bien été envoyée. Merci, nous reviendrons vers vous rapidement !');
         form.reset();
         fileNameEl.textContent = '';
+        if (hasChoice) {
+          infoInput.disabled = true;
+          infoInput.placeholder = "Choisissez d'abord un type de contrat";
+          infoLabelEl.textContent = form.dataset.infoLabel || '';
+        }
       } catch (err) {
         showStatus('error', 'Une erreur est survenue lors de l\'envoi. Merci de réessayer.');
       } finally {
